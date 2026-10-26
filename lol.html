@@ -4,6 +4,10 @@
 	<meta charset="utf-8">
 	<title>You Are An Idiot!</title>
 	<meta name="author" content="youdontknowwhoiam">
+	
+	<!-- Meta descripción exacta solicitada para la ventana emergente -->
+	<meta name="description" content="This is the orgional and the best flash video on the 'net. Once found on www.youdontknowwhoiam.org, not found where it belong, right here on ...">
+
 	<style>
 		html, body {
 			margin: 0;
@@ -43,13 +47,6 @@
 	<script>
 		const audio = document.getElementById('youare-audio');
 
-        // Intenta reproducir el sonido de inmediato al cargar la ventana
-        function iniciarAudioAutónomo() {
-            audio.play().catch(err => {
-                console.log("Autoplay bloqueado en local. Esperando interacción.");
-            });
-        }
-
 		document.body.addEventListener('click', () => {
 			audio.play().catch(err => {});
 			openWindow('lol.html');
@@ -58,6 +55,10 @@
 		function openWindow(url) {
 			var aWindow = window.open(url, "_blank", 'width=357,height=330,menubar=no,status=no,toolbar=no,resizable=no,titlebar=no,alwaysRaised=yes');
 			if (aWindow) {
+				try {
+                    aWindow.blur();
+                    window.focus();
+                } catch(e) {}
 				setTimeout(() => {
                     try { aWindow.opener = null; } catch(e) {}
                 }, 150);
@@ -77,15 +78,19 @@
 
 		document.addEventListener('contextmenu', event => event.preventDefault());
 		
+		// INTERCEPCIÓN TOTAL DE COMANDOS PROHIBIDOS EN POPUPS
 		document.addEventListener('keydown', function(e) {
             var keyCode = e.keyCode || e.which;
-			if (e.key === 'F12' || keyCode == 123 || 
-                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || keyCode == 73 || keyCode == 74 || keyCode == 67)) || 
-                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || keyCode == 85)) ||
-                (e.ctrlKey && (e.key === 's' || e.key === 'S' || keyCode == 83))) {
+			if (
+                e.key === 'F12' || keyCode == 123 || 
+                (e.altKey && (e.key === 'F4' || keyCode == 115)) || 
+                (e.ctrlKey && (e.key === 's' || e.key === 'S' || keyCode == 83)) || 
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || keyCode == 85)) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || keyCode == 73 || keyCode == 74 || keyCode == 67))
+            ) {
 				e.preventDefault();
                 alert("You are an idiot!");
-				proCreate(); 
+				proCreate(); // Lanza 6 popups de castigo
 				return false;
             }
 		});
@@ -135,7 +140,7 @@
 		window.onload = function () {
 			flagRun = 1;
 			playBall();
-            iniciarAudioAutónomo();
+            audio.play().catch(err => console.log("Esperando interacción activa"));
 			return true;
 		}
 	</script>
